@@ -48,6 +48,7 @@ app.post('/todos', (req, res) => {
     .catch(error => console.log(error))
 })
 
+//在路由網址用: 表示是一個動態參數可以用req.params取出資料 瀏覽特定to-do
 app.get('/todos/:id', (req, res) => {
   const id = req.params.id
   return Todo.findById(id) //用this_id來動態捕捉每筆資料編號
@@ -56,6 +57,27 @@ app.get('/todos/:id', (req, res) => {
     .catch(error => console.log(error)) //錯誤處理
 })
 
+//設定修改特定to-do路由
+app.get('/todos/:id/edit', (req, res) => {
+  const id = req.params.id
+  return Todo.findById(id)
+    .lean()
+    .then((todo) => res.render('edit', { todo }))
+    .catch(error => console.log(error))
+})
+
+//update功能: 資料庫修改特定todo的資料
+app.post('/todos/:id/edit', (req, res) => {
+  const id = req.params.id
+  const name = req.body.name
+  return Todo.findById(id) //查詢id資料
+    .then(todo => { //如果查詢成功修改後重新儲存資料
+      todo.name = name
+      return todo.save()
+    })
+    .then(()=> res.redirect(`/todos/${id}`)) //如果儲存成功導向首頁
+    .catch(error => console.log(error))
+})
 
 // 設定 port 3000
 app.listen(3000, () => {

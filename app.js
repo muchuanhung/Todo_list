@@ -57,7 +57,7 @@ app.get('/todos/:id', (req, res) => {
     .catch(error => console.log(error)) //錯誤處理
 })
 
-//設定修改特定to-do路由
+//設定修改特定todo路由
 app.get('/todos/:id/edit', (req, res) => {
   const id = req.params.id
   return Todo.findById(id)
@@ -76,6 +76,15 @@ app.post('/todos/:id/edit', (req, res) => {
       return todo.save()
     })
     .then(()=> res.redirect(`/todos/${id}`)) //如果儲存成功導向首頁
+    .catch(error => console.log(error))
+})
+
+//刪除特定todo
+app.post('/todos/:id/delete', (req, res) => {
+    const id = req.params.id //取得id查詢使用者想刪除的todo
+  return Todo.findById(id)
+    .then(todo => todo.remove())
+    .then(() => res.redirect('/')) //使用redirect重新呼叫首頁
     .catch(error => console.log(error))
 })
 

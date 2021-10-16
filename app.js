@@ -35,6 +35,7 @@ app.get('/', (req, res) => {
     .catch(error => console.error(error)) //錯誤處理
 })
 
+//新增一筆to-do
 app.get('/todos/new', (req, res) => {
   return res.render('new')
 })
@@ -45,6 +46,14 @@ app.post('/todos', (req, res) => {
   return Todo.create({ name })     // 存入資料庫
     .then(() => res.redirect('/')) // 新增完成後導回首頁
     .catch(error => console.log(error))
+})
+
+app.get('/todos/:id', (req, res) => {
+  const id = req.params.id
+  return Todo.findById(id) //用this_id來動態捕捉每筆資料編號
+    .lean() //把mongoose 的model物件轉換成乾淨的 javascript資料陣列
+    .then((todo) => res.render('detail', { todo })) //將資料傳給index前端樣板
+    .catch(error => console.log(error)) //錯誤處理
 })
 
 

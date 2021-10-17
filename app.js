@@ -5,8 +5,10 @@ const exphbs = require('express-handlebars') //載入 handlebars
 const Todo = require ('./models/todo') //載入Todo model
 const bodyParser = require('body-parser') //載入bodyParser
 const app = express()
+const PORT = process.env.PORT || 3000
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/todo_list'
 
-mongoose.connect('mongodb://localhost/todo_list', { useNewUrlParser: true, useUnifiedTopology: true }) // 設定連線到 mongoDB
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true }) // 設定連線到 mongoDB
 
 // 取得資料庫連線狀態
 const db = mongoose.connection
@@ -89,6 +91,6 @@ app.post('/todos/:id/delete', (req, res) => {
 })
 
 // 設定 port 3000
-app.listen(3000, () => {
-  console.log('App is running on http://localhost:3000')
+app.listen(PORT, () => {  
+  console.log(`App is running on http://localhost:${PORT}`)
 })
